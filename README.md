@@ -1,62 +1,82 @@
-# Laravel CRUD Project
-
-**Laravel** adalah framework PHP berbasis arsitektur **MVC (Model-View-Controller)** yang memudahkan pengembangan aplikasi web dengan cepat dan elegan.  
-Project ini adalah contoh CRUD sederhana untuk entitas **Mahasiswa** dengan API dan tampilan web.
-
----
-
-## 🚀 Fitur
-
-- CRUD Mahasiswa (Create, Read, Update, Delete)
-- API RESTful menggunakan `apiResource`
-- Frontend sederhana menggunakan Blade dan Tailwind CSS
-- Contoh route API dan Web
-- Integrasi database MySQL
-
----
-sebelum clone buat folder baru baik manual maupun bisa menggunakan perintah
+## KONFIGURASI DI DATABASE
+import database
 ```
-mkdir coba_uas_pbf
+GitHub - mayangm09/DBE-SI-Penjadwalan-Skripsi
 ```
-kemudian
+## KONFIGURASI DI BACKEND
+### 1. Clone Repository BE
 ```
-cd coba_uas_pbf
+https://github.com/MuhammadAbiAM/BE-Jadwal-Skripsi.git
+cd BE-Jadwal-Skripsi
 ```
 
-## 📥 1. Clone Backend Laravel
 
-```bash
-git clone https://github.com/username/nama-project.git
-cd nama-project
+### 2. Install composer CI
 ```
-##🛢️ 2. Import Database
-Buka phpMyAdmin: http://localhost/phpmyadmin
+composer install
+```
+### 3. Copy File Environment
+```
+cp .env.example .env
+```
 
-Buat database baru: laravel_crud
-
-Import file .sql dari folder database ke database tersebut.
-
-## ⚙️ 3. Menjalankan dan Mengecek Backend dengan Postman
-Menjalankan server CI
+### 4. Menjalankan CI
 ```
 php spark serve
 ```
 
-Menjalankan Server Laravel
+### 5. Cek EndPoint menggunakan Postman
+Kelas :
+User
+GET → http://localhost:8080/user
+GET → http://localhost:8080/user/{id}
 
-```
-php artisan serve
-```
+Mahasiswa
+GET → http://localhost:8080/mahasiswa
+GET → http://localhost:8080/mahasiswa/{id}
+POST → http://localhost:8080/mahasiswa
+PUT → http://localhost:8080/mahasiswa/{id}
+DELETE → http://localhost:8080/mahasiswa/{id}
 
-Server akan berjalan di:
-http://127.0.0.1:8000
+Dosen
+GET → http://localhost:8080/dosen
+GET → http://localhost:8080/dosen/{id}
+POST → http://localhost:8080/dosen
+PUT → http://localhost:8080/dosen/{id}
+DELETE → http://localhost:8080/dosen/{id}
 
-Cek API dengan Postman
-Method: GET
+Ruangan
+GET → http://localhost:8080/ruangan
+GET → http://localhost:8080/ruangan/{id}
+POST → http://localhost:8080/ruangan
+PUT → http://localhost:8080/ruangan/{id}
+DELETE → http://localhost:8080/ruangan/{id}
 
-URL: http://127.0.0.1:8000/api/mahasiswa
 
-Klik Send → Pastikan response JSON muncul.
+Jadwal Sidang
+GET → http://localhost:8080/jadwal
+GET → http://localhost:8080/jadwal/{id}
+POST → http://localhost:8080/jadwal
+PUT → http://localhost:8080/jadwal/{id}
+DELETE → http://localhost:8080/jadwal/{id}
+
+Penguji Sidang
+GET → http://localhost:8080/penguji
+GET → http://localhost:8080/penguji/{id}
+POST → http://localhost:8080/penguji
+PUT → http://localhost:8080/penguji/{id}
+DELETE → http://localhost:8080/penguji/{id}
+
+Views
+GET → http://localhost:8080/view_jadwal
+GET → http://localhost:8080/view_jadwal/{id}
+GET → http://localhost:8080/view_penguji
+GET → http://localhost:8080/view_penguji/{id}
+GET → http://localhost:8080/view_penjadwalan
+GET → http://localhost:8080/view_penjadwalan/{id}
+
+
+
 
 ### Troubleshooting umum Postman & Laravel
 | Masalah        | Penyebab                             | Solusi                                                                                            |
@@ -79,8 +99,8 @@ composer install
 ```
 
 
-## ⚙️ 4. Membuat Project Laravel Baru via Laragon (Optional)
-Lewat Laragon GUI
+## MEMBUAT PROJECT BARU LARAVEL DENGAN LARAGON
+
 Klik kanan Laragon → Quick App → Laravel → beri nama project
 
 ```
@@ -90,15 +110,15 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-### edit file .env sesuai database
+### EDIT .env
 ```
 DB_DATABASE=laravel_crud
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-##🔧 5. Contoh Kode Utama
-### a. Routing API (routes/web.php)
+## PENGUBAHAN PADA LARAVEL
+### a. ROUTES (routes/web.php)
 ```
 <?php
 use App\Http\Controllers\DataMahasiswaController;
@@ -129,7 +149,7 @@ Route::delete('/ruangan/{kode_ruangan}', [DataRuanganController::class, 'destroy
 
 ?>
 ```
-### b. Controller (app/Http/Controllers/MahasiswaController.php)
+### b. CONTROLLER (app/Http/Controllers/MahasiswaController.php)
 ```
 <?php
 
@@ -177,7 +197,7 @@ class DataMahasiswaController extends Controller
     }
 }
 ```
-### c. Model (app/Models/Mahasiswa.php)
+### c. MODEL (app/Models/Mahasiswa.php)
 ```
 <?php
 
