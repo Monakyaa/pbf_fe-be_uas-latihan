@@ -26,6 +26,7 @@ php spark serve
 ```
 
 ### 5. Cek EndPoint menggunakan Postman
+```
 Kelas :
 User
 GET → http://localhost:8080/user
@@ -74,6 +75,7 @@ GET → http://localhost:8080/view_penguji
 GET → http://localhost:8080/view_penguji/{id}
 GET → http://localhost:8080/view_penjadwalan
 GET → http://localhost:8080/view_penjadwalan/{id}
+```
 
 
 
