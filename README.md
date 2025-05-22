@@ -177,6 +177,20 @@ class DataMahasiswaController extends Controller
     }
 }
 ```
+### c. Model (app/Models/Mahasiswa.php)
+```
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class DataMahasiswa extends Model
+{
+    //
+}
+
+```
 ### mahasiswa.blade.php
 ```
 <!DOCTYPE html>
@@ -256,20 +270,6 @@ class DataMahasiswaController extends Controller
 
 </body>
 </html>
-
-```
-### c. Model (app/Models/Mahasiswa.php)
-```
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-class DataMahasiswa extends Model
-{
-    //
-}
 
 ```
 
