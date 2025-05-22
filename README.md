@@ -69,8 +69,15 @@ DB_DATABASE=laravel_crud
 DB_USERNAME=root
 DB_PASSWORD=
 
-| Migration belum dijalankan | Jalankan php artisan migrate |
-| Vendor Not Found| Paket composer belum diinstall | Jalankan composer install |
+### Jika migration belum dijalankan, jalankan:
+```
+php artisan migrate    
+``` |
+| **Vendor Not Found** | Paket Composer belum terinstall | Install package Composer dengan perintah:  
+```bash
+composer install
+```
+
 
 ## ⚙️ 4. Membuat Project Laravel Baru via Laragon (Optional)
 Lewat Laragon GUI
