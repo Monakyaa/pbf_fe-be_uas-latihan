@@ -1,209 +1,317 @@
-# 🔥 Laravel CRUD Project
+# Laravel CRUD Project
 
-**Laravel** adalah framework PHP berbasis arsitektur **MVC (Model-View-Controller)** yang dirancang untuk membantu developer membuat aplikasi web secara cepat, efisien, dan elegan. Dengan dukungan Blade template, Eloquent ORM, sistem routing, dan keamanan bawaan, Laravel menjadi pilihan populer untuk pengembangan web modern.
+**Laravel** adalah framework PHP berbasis arsitektur **MVC (Model-View-Controller)** yang memudahkan pengembangan aplikasi web dengan cepat dan elegan.  
+Project ini adalah contoh CRUD sederhana untuk entitas **Mahasiswa** dengan API dan tampilan web.
 
 ---
 
-## 📥 1. Clone Backend Laravel
+## 🚀 Fitur
 
-Clone project dari GitHub ke local menggunakan perintah:
+- CRUD Mahasiswa (Create, Read, Update, Delete)
+- API RESTful menggunakan `apiResource`
+- Frontend sederhana menggunakan Blade dan Tailwind CSS
+- Contoh route API dan Web
+- Integrasi database MySQL
+
+---
+sebelum clone buat folder baru baik manual maupun bisa menggunakan perintah
+```
+mkdir coba_uas_pbf
+```
+kemudian
+```
+cd coba_uas_pbf
+```
+
+## 📥 1. Clone Backend Laravel
 
 ```bash
 git clone https://github.com/username/nama-project.git
 cd nama-project
 ```
+##🛢️ 2. Import Database
+Buka phpMyAdmin: http://localhost/phpmyadmin
 
----
+Buat database baru: laravel_crud
 
-## 🛢️ 2. Import Database
+Import file .sql dari folder database ke database tersebut.
 
-1. Buka phpMyAdmin via Laragon: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)  
-2. Buat database baru, misalnya: `laravel_crud`
-3. Import file `.sql` yang tersedia dari folder `database` atau hasil export yang sudah dikirim.
+## ⚙️ 3. Menjalankan dan Mengecek Backend dengan Postman
+Menjalankan server CI
+```
+php spark serve
+```
 
----
+Menjalankan Server Laravel
 
-## ⚙️ 3. Membuat Project Laravel via Laragon
+```
+php artisan serve
+```
 
-### Opsi 1: Lewat GUI Laragon
+Server akan berjalan di:
+http://127.0.0.1:8000
 
-- Buka Laragon
-- Klik kanan → **Quick App** → **Laravel**
-- Beri nama project misalnya `laravel-crud-app`
+Cek API dengan Postman
+Method: GET
 
-### Opsi 2: Lewat Terminal
+URL: http://127.0.0.1:8000/api/mahasiswa
 
-```bash
+Klik Send → Pastikan response JSON muncul.
+
+### Troubleshooting umum Postman & Laravel
+| Masalah        | Penyebab                             | Solusi                                                                                            |
+| -------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| 404 Not Found  | Route belum terdaftar atau salah URL | Cek `routes/api.php`, pastikan ada `Route::apiResource('mahasiswa', MahasiswaController::class);` |
+|                | Server Laravel belum dijalankan      | Jalankan dengan `php artisan serve`                                                               |
+| Database Error | Konfigurasi `.env` salah             | Cek konfigurasi database di `.env`:                                                               |
+
+DB_DATABASE=laravel_crud
+DB_USERNAME=root
+DB_PASSWORD=
+
+| Migration belum dijalankan | Jalankan php artisan migrate |
+| Vendor Not Found| Paket composer belum diinstall | Jalankan composer install |
+
+## ⚙️ 4. Membuat Project Laravel Baru via Laragon (Optional)
+Lewat Laragon GUI
+Klik kanan Laragon → Quick App → Laravel → beri nama project
+
+```
 composer create-project laravel/laravel laravel-crud-app
-```
-
-Masuk ke folder project:
-
-```bash
 cd laravel-crud-app
-```
-
-Salin dan konfigurasi file `.env`:
-
-```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-Edit file `.env`:
-
-```env
+### edit file .env sesuai database
+```
 DB_DATABASE=laravel_crud
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
----
-
-## 🔧 4. Setup API & Tes di Postman
-
-### a. Buat Model + Migration + Controller
-
-```bash
-php artisan make:model Mahasiswa -mcr
+##🔧 5. Contoh Kode Utama
+### a. Routing API (routes/web.php)
 ```
+<?php
+use App\Http\Controllers\DataMahasiswaController;
+use App\Http\Controllers\DataJadwalSidangController;
+use App\Http\Controllers\DataRuanganController;
+use Illuminate\Support\Facades\Route;
 
-Struktur yang dihasilkan:
-
-- `app/Models/Mahasiswa.php`
-- `database/migrations/...create_mahasiswas_table.php`
-- `app/Http/Controllers/MahasiswaController.php`
-
-### b. Tambahkan Routing di `routes/api.php`
-
-```php
-Route::apiResource('mahasiswa', MahasiswaController::class);
-```
-
-### c. Tes API Menggunakan Postman
-
-Jalankan server:
-
-```bash
-php artisan serve
-```
-
-Uji endpoint di Postman:
-
-- Method: `GET`
-- URL: `http://127.0.0.1:8000/api/mahasiswa`
-
-Klik **Send**, dan pastikan response JSON muncul sesuai harapan.
-
----
-
-## 🖥️ 5. Membuat Tampilan Web (Frontend)
-
-### a. Edit Route di `routes/web.php`
-
-```php
-Route::get('/', function () {
-    return view('mahasiswa.index');
+Route::get('/dashboard', function () {
+    return view('dashboard');
 });
+
+
+Route::get('/', [DataMahasiswaController::class, 'index']); // Halaman utama
+Route::get('/mahasiswa', [DataMahasiswaController::class, 'index']); // Ini penting!
+Route::get('/mahasiswa/create', [DataMahasiswaController::class, 'create']);
+Route::post('/mahasiswa', [DataMahasiswaController::class, 'store']);
+Route::get('/mahasiswa/{id}/edit', [DataMahasiswaController::class, 'edit']);
+Route::put('/mahasiswa/{id}', [DataMahasiswaController::class, 'update']);
+Route::delete('/mahasiswa/{id}', [DataMahasiswaController::class, 'destroy']);
+
+#ini ruangan
+Route::get('/ruangan', [DataRuanganController::class, 'index']);           // Tampil data ruangan
+Route::get('/ruangan/create', [DataRuanganController::class, 'create']);  // Form tambah ruangan
+Route::post('/ruangan', [DataRuanganController::class, 'store']);         // Simpan ruangan baru
+Route::get('/ruangan/{kode_ruangan}/edit', [DataRuanganController::class, 'edit']);    // Form edit ruangan
+Route::put('/ruangan/{kode_ruangan}', [DataRuanganController::class, 'update']);        // Update ruangan
+Route::delete('/ruangan/{kode_ruangan}', [DataRuanganController::class, 'destroy']);    // Hapus ruangan
+
+?>
+```
+### b. Controller (app/Http/Controllers/MahasiswaController.php)
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
+class DataMahasiswaController extends Controller
+{
+    private $apiBase = "http://localhost:8080/mahasiswa";
+
+    public function index() {
+        $response = Http::get($this->apiBase);
+        $json = $response->json();
+        $mahasiswa = $json['data'] ?? []; // Ambil hanya data array
+        return view('DataMahasiswa', compact('mahasiswa'));
+    }
+
+    public function create() {
+        return view('tambahMahasiswa');
+    }
+
+    public function store(Request $request) {
+        Http::post($this->apiBase, $request->all());
+        return redirect('/'); // Ganti jika index route-nya lain
+    }
+
+    public function edit($id) {
+    $response = Http::get("{$this->apiBase}/{$id}");
+    $json = $response->json();
+    $data = $json['data'] ?? null;
+    return view('editMahasiswa', compact('data'));
+}
+
+
+    public function update(Request $request, $id) {
+        Http::put("{$this->apiBase}/{$id}", $request->all());
+        return redirect('/');
+    }
+
+    public function destroy($id) {
+        Http::delete("{$this->apiBase}/{$id}");
+        return redirect('/');
+    }
+}
 ```
 
-### b. Buat File Blade View
+### c. Model (app/Models/Mahasiswa.php)
+```
+<?php
 
-Lokasi: `resources/views/mahasiswa/index.blade.php`
+namespace App\Models;
 
-Contoh isi:
+use Illuminate\Database\Eloquent\Model;
 
-```blade
-@extends('layouts.app')
+class DataMahasiswa extends Model
+{
+    //
+}
 
-@section('content')
-<div class="p-6">
-    <h2 class="text-xl font-bold mb-4">Data Mahasiswa</h2>
-    <table class="min-w-full border border-gray-300">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="p-2 border">ID</th>
-                <th class="p-2 border">Nama</th>
-                <th class="p-2 border">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{-- Data loop di sini --}}
-        </tbody>
-    </table>
-</div>
-@endsection
 ```
 
----
+### tambahMahasiswa.blade.php
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Mahasiswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-## 🧭 6. Tambahkan Template Navbar & Sidebar
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">
+            {{ isset($data) ? 'Edit Data Mahasiswa' : 'Tambah Data Mahasiswa' }}
+        </h1>
 
-Cari template Tailwind gratis dari:
+        <form method="POST" action="{{ isset($data) ? url('/mahasiswa/' . $data['id']) : url('/mahasiswa') }}">
+            @csrf
+            @if(isset($data))
+                @method('PUT')
+            @endif
 
-- [https://tailwindcomponents.com](https://tailwindcomponents.com)
-- [https://flowbite.com](https://flowbite.com)
-- [https://daisyui.com](https://daisyui.com)
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">NIM</label>
+                <input type="text" name="nim" value="{{ $data['nim'] ?? '' }}" required
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
 
-Salin HTML **navbar** dan **sidebar**, lalu taruh di `resources/views/layouts/app.blade.php`.
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">Nama</label>
+                <input type="text" name="nama" value="{{ $data['nama'] ?? '' }}" required
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
 
-Contoh struktur layout:
+            <div class="mb-6">
+                <label class="block text-gray-700 font-semibold mb-1">Prodi</label>
+                <input type="text" name="prodi" value="{{ $data['prodi'] ?? '' }}" required
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
 
-```blade
-<body class="flex">
-    @include('layouts.sidebar')
-
-    <div class="flex-1">
-        @include('layouts.navbar')
-        
-        <main class="p-4">
-            @yield('content')
-        </main>
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                {{ isset($data) ? 'Update' : 'Simpan' }}
+            </button>
+        </form>
     </div>
+
 </body>
+</html>
 ```
 
----
+### editMahasiswa.blade.php
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Mahasiswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-## 💾 Menjalankan Server
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Edit Data Mahasiswa</h1>
 
-```bash
+        <form method="POST" action="{{ url('/mahasiswa/' . $data['npm']) }}">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">NPM</label>
+                <input type="text" name="npm" value="{{ $data['npm'] }}" readonly
+                       class="w-full px-4 py-2 border bg-gray-100 rounded-lg text-gray-600">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">Nama Mahasiswa</label>
+                <input type="text" name="nama_mahasiswa" value="{{ $data['nama_mahasiswa'] }}"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">Program Studi</label>
+                <input type="text" name="program_studi" value="{{ $data['program_studi'] }}"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">Judul Skripsi</label>
+                <input type="text" name="judul_skripsi" value="{{ $data['judul_skripsi'] }}"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 font-semibold mb-1">Email</label>
+                <input type="email" name="email" value="{{ $data['email'] }}"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200">
+                Simpan Perubahan
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>
+```
+
+### Jalankan Di server
+```
 php artisan serve
 ```
 
-Akses di browser:
-
+### upload ke GitHub
 ```
-http://127.0.0.1:8000
-```
-
----
-
-## ☁️ Upload ke GitHub via Terminal (VS Code)
-
-Inisialisasi Git:
-
-```bash
 git init
 git add .
 git commit -m "Initial commit"
-```
-
-Tambahkan remote GitHub:
-
-```bash
 git remote add origin https://github.com/username/laravel-crud-app.git
-```
-
-Push ke branch utama:
-
-```bash
 git branch -M main
 git push -u origin main
 ```
 
----
 
-## ✅ Selesai!
 
-Project CRUD Laravel berhasil dibuat lengkap dengan frontend, backend API, layout responsif menggunakan Tailwind, serta integrasi ke GitHub.
+
+
