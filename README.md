@@ -177,7 +177,87 @@ class DataMahasiswaController extends Controller
     }
 }
 ```
+### mahasiswa.blade.php
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Mahasiswa</title>
+    <script src="https://cdn.tailwindcss.com"></script> /// Menggunakan CDN Tailwind CSS untuk styling
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal"> /// Styling dasar pada body
 
+<div class="flex"> /// Flex container utama
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-blue-800 min-h-screen text-white"> /// Sidebar kiri dengan lebar 64, tinggi penuh dan latar biru
+        <div class="p-6 font-bold text-xl border-b border-blue-600">
+            Si-JawaSi /// Judul aplikasi
+        </div>
+        <nav class="mt-4">
+            <a href="/mahasiswa" class="block px-6 py-3 bg-blue-700">Daftar Mahasiswa</a> 
+            /// Link menu aktif (hardcoded)
+            
+            <a href="/ruangan" class="block px-6 py-3 hover:bg-blue-700 {{ request()->is('ruangan*') ? 'bg-blue-700' : '' }}">
+                Ruangan
+            </a> 
+            /// Link ke halaman ruangan dengan pengecekan aktif berdasarkan URL menggunakan Blade
+        </nav>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 p-8"> /// Konten utama halaman
+        <div class="flex justify-between items-center mb-6"> /// Header halaman dengan judul dan tombol
+            <h1 class="text-3xl font-semibold">Daftar Mahasiswa</h1> /// Judul utama
+            <a href="/mahasiswa/create" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+                + Tambah Mahasiswa /// Tombol untuk menambah data mahasiswa
+            </a>
+        </div>
+
+        <div class="overflow-x-auto bg-white rounded shadow"> /// Container tabel dengan scroll horizontal
+            <table class="min-w-full table-auto text-left"> /// Tabel daftar mahasiswa
+                <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal"> /// Header tabel
+                    <tr>
+                        <th class="py-3 px-6">NPM</th>
+                        <th class="py-3 px-6">Nama</th>
+                        <th class="py-3 px-6">Prodi</th>
+                        <th class="py-3 px-6">Judul Skripsi</th>
+                        <th class="py-3 px-6">Email</th>
+                        <th class="py-3 px-6">Aksi</th> /// Kolom untuk tombol aksi
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700 text-sm">
+                    @foreach($mahasiswa as $mhs) /// Looping data mahasiswa
+                    <tr class="border-b hover:bg-gray-100"> /// Baris data dengan efek hover
+                        <td class="py-3 px-6">{{ $mhs['npm'] }}</td> /// Menampilkan NPM
+                        <td class="py-3 px-6">{{ $mhs['nama_mahasiswa'] }}</td> /// Menampilkan Nama
+                        <td class="py-3 px-6">{{ $mhs['program_studi'] }}</td> /// Menampilkan Program Studi
+                        <td class="py-3 px-6">{{ $mhs['judul_skripsi'] }}</td> /// Menampilkan Judul Skripsi
+                        <td class="py-3 px-6">{{ $mhs['email'] }}</td> /// Menampilkan Email
+                        <td class="py-3 px-6 flex space-x-2"> /// Kolom aksi Edit dan Hapus
+                            <a href="/mahasiswa/{{ $mhs['npm'] }}/edit" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">Edit</a>
+                            /// Tombol edit data
+
+                            <form action="/mahasiswa/{{ $mhs['npm'] }}" method="POST" onsubmit="return confirm('Hapus data ini?');">
+                                @csrf /// Token CSRF Laravel
+                                @method('DELETE') /// Menggunakan method spoofing untuk delete
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</button>
+                                /// Tombol hapus data
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach /// Akhir looping
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+```
 ### c. Model (app/Models/Mahasiswa.php)
 ```
 <?php
